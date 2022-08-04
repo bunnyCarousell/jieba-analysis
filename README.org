@@ -1,10 +1,10 @@
 Please check https://github.com/bunnyCarousell/elasticsearch-jieba-plugin/tree/7.4.2
 before download.
 
-# ----------------------------------------------
+* ----------------------------------------------
 
 
-## The following are readme from original repo: ##
+* The following are readme from original repo: *
 
 
 * 结巴分词(java版) jieba-analysis
