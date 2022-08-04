@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.huaban.analysis.jieba.viterbi.FinalSeg;
+import com.luhuiguo.chinese.ChineseUtils;
 
 
 public class JiebaSegmenter {
@@ -81,6 +82,8 @@ public class JiebaSegmenter {
 
 
     public List<SegToken> process(String paragraph, SegMode mode) {
+        paragraph = ChineseUtils.toSimplified(paragraph);
+
         List<SegToken> tokens = new ArrayList<SegToken>();
         StringBuilder sb = new StringBuilder();
         int offset = 0;

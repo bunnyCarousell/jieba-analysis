@@ -1,5 +1,7 @@
 package com.huaban.analysis.jieba;
 
+import com.luhuiguo.chinese.ChineseUtils;
+
 import java.io.BufferedReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -99,7 +101,7 @@ public class WordDictionary {
                 if (tokens.length < 2)
                     continue;
 
-                String word = tokens[0];
+                String word = ChineseUtils.toSimplified(tokens[0]);
                 double freq = Double.valueOf(tokens[1]);
                 total += freq;
                 word = addWord(word);
@@ -153,7 +155,7 @@ public class WordDictionary {
                 String line = br.readLine();
                 String[] tokens = line.split("[\t ]+");
 
-                String word = tokens[0];
+                String word = ChineseUtils.toSimplified(tokens[0]);
 
                 double freq = 3.0d;
                 if (tokens.length == 2)
