@@ -20,4 +20,6 @@ public class SegToken {
         return "[" + word + ", " + startOffset + ", " + endOffset + "]";
     }
 
+    public String getWord() { return word; }
+
 }

@@ -8,6 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 import junit.framework.TestCase;
 
@@ -134,6 +138,26 @@ public class JiebaSegmenterTest extends TestCase {
         for (String sentence : sentences) {
             List<SegToken> tokens = segmenter.process(sentence, SegMode.SEARCH);
             System.out.print(String.format(Locale.getDefault(), "\n%s\n%s", sentence, tokens.toString()));
+        }
+    }
+    @Test
+    public void testCutForIndex3GramCarou() {
+        Map<String, String[]> indexQueryResults = new HashMap<String, String[]>(){{
+            put("玫瑰花", new String[]{"玫瑰花", "玫瑰", "瑰", "玫", "花"});
+            put("炎兔兒", new String[]{"炎", "兔儿", "兔", "儿"});
+        }};
+
+        for (Map.Entry<String, String[]> pair : indexQueryResults.entrySet()) {
+            List<SegToken> tokens = segmenter.process(pair.getKey(), SegMode.INDEX);
+
+            Set<String> indexTokens = new HashSet<String>();
+            for (SegToken token : tokens) {
+                indexTokens.add(token.getWord());
+            }
+            // check
+            for (String s : pair.getValue()) {
+                assertTrue( indexTokens.contains(s));
+            }
         }
     }
 

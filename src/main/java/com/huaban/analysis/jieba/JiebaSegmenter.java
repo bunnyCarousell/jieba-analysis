@@ -101,6 +101,15 @@ public class JiebaSegmenter {
                     }
                     else {
                         for (String token : sentenceProcess(sb.toString())) {
+                            if (token.length() > 1) {
+                                String gram1;
+                                int j = 0;
+                                for (; j < token.length() ; ++j) {
+                                    gram1 = token.substring(j, j + 1);
+                                    if (wordDict.containsWord(gram1))
+                                        tokens.add(new SegToken(gram1, offset + j, offset + j + 1));
+                                }
+                            }
                             if (token.length() > 2) {
                                 String gram2;
                                 int j = 0;
@@ -139,6 +148,15 @@ public class JiebaSegmenter {
             }
             else {
                 for (String token : sentenceProcess(sb.toString())) {
+                    if (token.length() > 1) {
+                        String gram1;
+                        int j = 0;
+                        for (; j < token.length() ; ++j) {
+                            gram1 = token.substring(j, j + 1);
+                            if (wordDict.containsWord(gram1))
+                                tokens.add(new SegToken(gram1, offset + j, offset + j + 1));
+                        }
+                    }
                     if (token.length() > 2) {
                         String gram2;
                         int j = 0;
