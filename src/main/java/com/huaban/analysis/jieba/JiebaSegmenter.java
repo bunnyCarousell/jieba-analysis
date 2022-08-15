@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.huaban.analysis.jieba.viterbi.FinalSeg;
+import com.luhuiguo.chinese.ChineseUtils;
 
 
 public class JiebaSegmenter {
@@ -81,6 +82,8 @@ public class JiebaSegmenter {
 
 
     public List<SegToken> process(String paragraph, SegMode mode) {
+        paragraph = ChineseUtils.toSimplified(paragraph);
+
         List<SegToken> tokens = new ArrayList<SegToken>();
         StringBuilder sb = new StringBuilder();
         int offset = 0;
@@ -98,24 +101,7 @@ public class JiebaSegmenter {
                     }
                     else {
                         for (String token : sentenceProcess(sb.toString())) {
-                            if (token.length() > 2) {
-                                String gram2;
-                                int j = 0;
-                                for (; j < token.length() - 1; ++j) {
-                                    gram2 = token.substring(j, j + 2);
-                                    if (wordDict.containsWord(gram2))
-                                        tokens.add(new SegToken(gram2, offset + j, offset + j + 2));
-                                }
-                            }
-                            if (token.length() > 3) {
-                                String gram3;
-                                int j = 0;
-                                for (; j < token.length() - 2; ++j) {
-                                    gram3 = token.substring(j, j + 3);
-                                    if (wordDict.containsWord(gram3))
-                                        tokens.add(new SegToken(gram3, offset + j, offset + j + 3));
-                                }
-                            }
+                            add123gramToTokens(tokens, token, offset);
                             tokens.add(new SegToken(token, offset, offset += token.length()));
                         }
                     }
@@ -136,24 +122,7 @@ public class JiebaSegmenter {
             }
             else {
                 for (String token : sentenceProcess(sb.toString())) {
-                    if (token.length() > 2) {
-                        String gram2;
-                        int j = 0;
-                        for (; j < token.length() - 1; ++j) {
-                            gram2 = token.substring(j, j + 2);
-                            if (wordDict.containsWord(gram2))
-                                tokens.add(new SegToken(gram2, offset + j, offset + j + 2));
-                        }
-                    }
-                    if (token.length() > 3) {
-                        String gram3;
-                        int j = 0;
-                        for (; j < token.length() - 2; ++j) {
-                            gram3 = token.substring(j, j + 3);
-                            if (wordDict.containsWord(gram3))
-                                tokens.add(new SegToken(gram3, offset + j, offset + j + 3));
-                        }
-                    }
+                    add123gramToTokens(tokens, token, offset);
                     tokens.add(new SegToken(token, offset, offset += token.length()));
                 }
             }
@@ -216,5 +185,23 @@ public class JiebaSegmenter {
 
         }
         return tokens;
+    }
+
+
+    private static void add123gramToTokens(List<SegToken> tokens, String token, int offset) { 
+        addTokensForNgram(tokens, token, offset, 1);
+        addTokensForNgram(tokens, token, offset, 2);
+        addTokensForNgram(tokens, token, offset, 3);
+    }
+
+    private static void addTokensForNgram(List<SegToken> tokens, String token, int offset, int ngram) {
+        if (token.length() > ngram) {
+            String gram;
+            for (int start = 0; start < token.length() - (ngram - 1); ++start) {
+                gram = token.substring(start, start + ngram);
+                if (wordDict.containsWord(gram))
+                    tokens.add(new SegToken(gram, offset + start, offset + start + ngram));
+            }
+        }
     }
 }
